@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Minesweeper-Ksenia</title>
+</head>
+
+<body onload="initGame()">
+    <div class="head">
+        <h2>Minesweeper</h2>
+        <div class="info flex">
+            <div>
+                <h5>Score: <span class="score"></span></h5>
+                <h5>Time: <span class="time"></span></h5>
+            </div>
+            <div>
+                <h6>Lives: <span class="lives"></span></h6>
+                <h6>Hint: <span class="hint"></span></h6>
+            </div>
+        </div>
+        <button class="reset" onclick="check()">imoji icon/reset</button>
+        <button class="rookie" onclick="check()">Rookie</button>
+        <button class="intermidiate" onclick="check()">Intermidiate</button>
+        <button class="pro" onclick="check()">Pro</button>
+    </div>
+    <div class="board-container" onclick="">
+    </div>
+    <!---win: you are da bomb-->
+    <div class="modal"></div>
+    <div class="board"></div>
+    <script src="utils.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
