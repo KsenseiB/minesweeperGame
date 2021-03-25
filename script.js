@@ -4,7 +4,7 @@ const MINE = '💣';
 const IMOJI = '🤓';
 const DEAD = '💀'
 const EMPTY = '';
-var gInterval;
+var gTimer;
 var gBoard;
 
 var gLevel = {
@@ -26,6 +26,7 @@ function initGame()
     // board needs to be created only after first click
     gBoard = buildBoard(gLevel.SIZE);
     renderBoard(gBoard, '.board-container');
+    timer.innerText = '00:00';
     // console.log(gBoard);
 }
 
@@ -37,7 +38,6 @@ function setDiff(num)
     if (num === 12) gLevel.SIZE = 12;
 }
 
-console.log(gBoard)
 
 function buildBoard(size)
 {
@@ -58,10 +58,11 @@ function buildBoard(size)
     return board;
 }
 
+// console.log(gBoard)
+
 function renderBoard(board)
 {
     // debugger;
-    // Render the board as a <table> to the page 
     var strHTML = '<table border="1"><tbody>';
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>';
@@ -74,9 +75,8 @@ function renderBoard(board)
                 cell = !FLAG;
             }
             var cellId = `${ i }-${ j }`;
-            // var className = `cell cell${ i }-${ j }`;
-            strHTML += `<td class="cell" id="${ cellId }" onclick="cellClicked(this)"><span>${ cell }</span></td>`;
-            // strHTML += '<td class="' + className + '" onclick="check()"><span> ' + cell + '</span> </td>';
+
+            strHTML += `<td class="cell unclicked" id="${ cellId }" onclick="cellClicked(this)"><span>${ cell }</span></td>`;
         }
         strHTML += '</tr>'
         // console.log(strHTML);
@@ -90,19 +90,29 @@ function renderBoard(board)
 
 function cellClicked(elCell)
 {
-    // debugger;
+    debugger;
+    console.log(elCell)
     var cellIdx = elCell.id.split('-'); //[i, j]
-    // debugger;
     var clickedCell = gBoard[ cellIdx[ 0 ] ][ cellIdx[ 1 ] ];
+    // if this is first click:
     if (gGame.shownCount === 0 && gGame.markedCount === 0) {
         gGame.isOn = true;
         startTimer();
+        renderCell(elCell, EMPTY);
         gBoard[ 2 ][ 0 ].isMine = true;
         gBoard[ 1 ][ 1 ].isMine = true;
     };
-    if (clickedCell.isMine) endGame();
+
+    if (clickedCell.isMine) {
+        renderCell(elCell, MINE);
+        // endGame();
+    };
+
+    if (clickedCell.isShown) return;
+
     clickedCell.minesAroundCount = setMinesNegsCount(cellIdx[ 0 ], cellIdx[ 1 ], gBoard);
     clickedCell.isShown = true;
+
     console.log('clicked cell is:', cellIdx)
     renderBoard(gBoard);
 }
@@ -110,14 +120,9 @@ function cellClicked(elCell)
 function renderCell(location, value)
 {
     // Select the elCell and set the value
-    var strHTML = '';
-    for (var i = 0; i < gBoard.length; i++) {
-        strHTML += `<tr class="" >`
-        for (var j = 0; j < gBoard[ i ].length; j++) {
-        }
-    }
-    var elCell = document.querySelector(`.cell${ location.i }-${ location.j }`);
+    var elCell = document.querySelector(location);
     elCell.innerHTML = value;
+    elCell.classList.remove('unclicked');
 };
 
 function countMines(cellI, cellJ, mat)
@@ -131,18 +136,22 @@ function countMines(cellI, cellJ, mat)
             if (mat[ i ][ j ].isMine) count++;
         }
     }
+    console.log('Mines count around this cell:', count)
     return count;
 }
 
-function setMinesNegsCount()
+function setMinesNegsCount(board, rowIdx, colIdx)
 {
-    // Count mines around each cell and set the cell's minesAroundCount.
-    // should run everytime a new cell is clicked
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[ i ].length; j++) {
-            gBoard[ i ][ j ].minesAroundCount = countMines(i, j, gBoard);
+    var countMinesAround = 0;
+    for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+        if (i < 0 || i > board.length - 1) continue
+        for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+            if (j < 0 || j > board[ 0 ].length - 1) continue
+            if (i === rowIdx && j === colIdx) continue
+            var cell = board[ i ][ j ].isMine;
+            if (cell) countMinesAround++
         }
-    }
+    } return countMinesAround;
 }
 
 
@@ -172,45 +181,40 @@ function expandShown(board, elCell, i, j)
 function checkGameOver()
 {
     // Game ends when all mines are marked, and all the other cells are shown
-    var cell = gBoard[ i ][ j ];
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[ i ].length; j++) {
-
-        }
+    if (gGame.markedCount === board.mines &&
+        (board.size ** 2) === (gGame.shownCount + gGame.markedCount)) {
+        // openModal('you win');
+        alert('you win')
     }
-    gGame.isOn = false;
-    stopTimer()
 }
 
 function endGame()
 {
-    console.log('you lose')
+    gGame.isOn = false;
+    console.log('you lose');
     stopTimer();
-    // openModal('You lose');
+    var imoji = document.querySelector('reset');
+    imoji.innerHTML = DEAD;
+    // openModal();
 }
 
-function reset()
-{
-    renderBoard();
-    timer.innerText = '00:00';
-    startTimer();
+const reset = () => initGame();
 
-}
 
 // function openModal(msg)
 // {
 
-    //     var elModal = document.querySelector('.modal');
-    //     elModal.style.display = 'block';
-    // elModal.innerText = msg;
-    // }
+//     var elModal = document.querySelector('.modal');
+//     elModal.style.display = 'block';
+//     elModal.innerText = msg;
+// }
 
-    // function closeModal()
-    // {
-        //     // hide the modal
-        //     var elModal = document.querySelector('.modal');
-        //     elModal.style.display = 'none';
-        // }
+// function closeModal()
+// {
+//     // hide the modal
+//     var elModal = document.querySelector('.modal');
+//     elModal.style.display = 'none';
+// }
 
 
 // <div class="modal">

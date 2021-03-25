@@ -10,25 +10,28 @@
 </head>
 
 <body onload="initGame()">
+
     <div class="head">
-        <h2>Minesweeper</h2>
+        <h1>Minesweeper</h1>
         <div class="info flex">
             <div>
-                <h5>Score: <span class="score"></span></h5>
-                <h5>Time: <span class="time">00:00</span></h5>
+                <h4>Score: <span class="score">0</span></h4>
+                <h4>Time: <span class="time">00:00</span></h4>
             </div>
             <div>
-                <h6>Lives: <span class="lives"></span></h6>
-                <h6>Hint: <span class="hint"></span></h6>
+                <h4>Lives: <span class="lives">2</span></h4>
+                <h4>Hint: <span class="hint">2</span></h4>
             </div>
         </div>
-        <button class="reset" onclick="reset()">SMILEY</button>
+        <div class="reset" onclick="reset()">🤓</div>
+        <div class="lvls">
         <button class="rookie" onclick="setDiff(4)">Rookie</button>
         <button class="intermidiate" onclick="setDiff(8)">Intermidiate</button>
         <button class="pro" onclick="setDiff(12)">Pro</button>
+        </div>
     </div>
     <div class="board-container"></div>
-    <div class="modal"></div>
+    <!-- <div class="modal hidden"></div> -->
 
     <script src="timer.js"></script>
     <script src="utils.js"></script>
