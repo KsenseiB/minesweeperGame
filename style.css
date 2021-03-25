@@ -1,9 +1,13 @@
 body {
-  font-size: 1.5rem;
+  font-size: 2rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-image: url('pics/noam.a.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-position: top; */
 }
 
 .info {
@@ -18,25 +22,63 @@ body {
   align-content: center;
 }
 
-button {
-  margin: 2rem 1rem;
-  font-size: 1.2rem;
-  border-radius: 2px;
-  border-width: 1px;
+.board-container {
+  background-image: url('pics/sign.jpg');
+  background-size: contain;
+}
+
+.lose {
+  background-image: url('pics/lose.jpg');
+  background-size: contain;
 }
 
 table {
   border-style: solid;
   border-width: 2px;
   border-radius: 2px;
-  width: 300px;
-  height: 300px;
+  min-width: 300px;
+  min-height: 300px;
 }
 
 td {
+  background-color: transparent;
   border: 1px solid;
   border-radius: 2px;
   cursor: pointer;
-  background-color: rgb(0, 255, 42);
+  background-color: rgba(255, 255, 255, 0.815);
 }
 
+button:not(reset) {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -khtml-border-radius: 5px;
+  background: #b3d436;
+  color: #fff;
+  border: solid 1px #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  padding: 1rem 10px;
+  width: 180px;
+  margin: 10px;
+  outline: none;
+}
+button:hover {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  background: #fff;
+  border: solid 1px #fff;
+  color: #b3d436;
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.info {
+  padding: 0;
+  margin: 0 auto;
+}

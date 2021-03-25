@@ -15,23 +15,22 @@
         <div class="info flex">
             <div>
                 <h5>Score: <span class="score"></span></h5>
-                <h5>Time: <span class="time"></span></h5>
+                <h5>Time: <span class="time">00:00</span></h5>
             </div>
             <div>
                 <h6>Lives: <span class="lives"></span></h6>
                 <h6>Hint: <span class="hint"></span></h6>
             </div>
         </div>
-        <button class="reset" onclick="check()">imoji icon/reset</button>
-        <button class="rookie" onclick="check()">Rookie</button>
-        <button class="intermidiate" onclick="check()">Intermidiate</button>
-        <button class="pro" onclick="check()">Pro</button>
+        <button class="reset" onclick="reset()">SMILEY</button>
+        <button class="rookie" onclick="setDiff(4)">Rookie</button>
+        <button class="intermidiate" onclick="setDiff(8)">Intermidiate</button>
+        <button class="pro" onclick="setDiff(12)">Pro</button>
     </div>
-    <div class="board-container" onclick="">
-    </div>
-    <!---win: you are da bomb-->
+    <div class="board-container"></div>
     <div class="modal"></div>
-    <div class="board"></div>
+
+    <script src="timer.js"></script>
     <script src="utils.js"></script>
     <script src="script.js"></script>
 </body>

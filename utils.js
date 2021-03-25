@@ -1,46 +1,20 @@
 var check = () => console.log('this is clicked all is good yo');
 
-// function printMat(mat, selector)
-// {
-//     var strHTML = '<table border="0"><tbody>';
-//     for (var i = 0; i < mat.length; i++) {
-//         strHTML += '<tr>';
-//         for (var j = 0; j < mat[ 0 ].length; j++) {
-//             var cell = mat[ i ][ j ];
-//             var className = 'cell cell' + i + '-' + j;
-//             strHTML += '<td class="' + className + '" onclick="check()"><span> ' + cell + '</span> </td>';
-//         }
-//         strHTML += '</tr>'
-//         // console.log(strHTML);
-//     }
-//     strHTML += '</tbody></table>';
-//     var elContainer = document.querySelector(selector);
-//     elContainer.innerHTML = strHTML;
-// };
-
-
-function randInt(min, max)
+function createMat(SIZE)
 {
-    return Math.floor(Math.random() * (max - min)) + min;
-};
+    var mat = [];
+    for (var i = 0; i < SIZE; i++) {
+        var row = [];
+        for (var j = 0; j < SIZE; j++) {
+            row.push('');
+        }
+        mat.push(row);
+    }
+    return mat;
+}
 
 
-function renderCell(location, value)
-{
-    // Select the elCell and set the value
-    var elCell = document.querySelector(`.cell${ location.i }-${ location.j }`);
-    elCell.innerHTML = value;
-};
-
-//timer
-function getTime()
-{
-    return new Date().toString().split(' ')[ 4 ];
-};
-// function start()
-// {
-//     gInterval = setInterval(moveBalloons, 1000);
-// }
+const randInt=(min, max) => Math.floor(Math.random() * (max - min)) + min;
 
 
 // Neighbours
@@ -51,6 +25,22 @@ function getTime()
 //         if (i === rowIdx && j === colIdx) continue
 //     }
 // };
+
+// function SumNeighbors(cellI, cellJ, mat)
+// {
+//     var neighborsSum = 0;
+//     for (var i = cellI - 1; i <= cellI + 1; i++) {
+//         if (i < 0 || i >= mat.length) continue;
+//         for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+//             if (j < 0 || j >= mat[ i ].length) continue;
+//             if (i === cellI && j === cellJ) continue;
+//             if (mat[ i ][ j ] === LIFE || mat[ i ][ j ] === SUPER_LIFE) neighborsSum++;
+//         }
+//     }
+//     return neighborsSum;
+// }
+
+
 
 
 // function cellClicked(elCell, i, j)
