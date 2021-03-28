@@ -1,5 +1,7 @@
 var check = () => console.log('this is clicked all is good yo');
 
+const randInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
 function createMat(SIZE)
 {
     var mat = [];
@@ -13,8 +15,34 @@ function createMat(SIZE)
     return mat;
 }
 
+const reset = () => initGame();
 
-const randInt=(min, max) => Math.floor(Math.random() * (max - min)) + min;
+const getCell = (i, j) =>
+{
+    var cell = null;
+    try {
+        cell = gBoard[ i ][ j ];
+    } catch (e) { }
 
-window.addEventListener("contextmenu", e => e.preventDefault());
+    return cell;
+}
+
+
+// TODO: erase
+// const neighborCells = (x, y) =>
+// {
+//     return [
+//         [ x - 1, y - 1 ],
+//         [ x, y - 1 ],
+//         [ x + 1, y - 1 ],
+//         [ x - 1, y ],
+//         [ x + 1, y ],
+//         [ x - 1, y + 1 ],
+//         [ x, y + 1 ],
+//         [ x + 1, y + 1 ]
+//     ]
+// }
+
+
+// window.addEventListener("contextmenu", e => { e.preventDefault() };
 
