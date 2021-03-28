@@ -85,54 +85,48 @@ function buildBoard(size)
             };
         }
     }
-    // debugger;
     return board;
 }
 
-// console.log(gBoard)
-
 function renderBoard(board)
 {
-    // debugger;
     var strHTML = '<table border="1"><tbody>';
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>';
         for (var j = 0; j < board[ 0 ].length; j++) {
-            var cell = board[ i ][ j ];
             var cellId = `${ i }-${ j }`;
-            console.log(renderCell(cell))
-            strHTML += `<td class="cell" id="${ cellId }" onclick="cellClicked(this)"><span>${ renderCell(cell) }</span></td>`;
+            strHTML += `<td class="cell" id="${ cellId }" onclick="cellClicked(this)"><span></span></td>`;
         }
         strHTML += '</tr>'
-        // console.log(strHTML);
     }
     strHTML += '</tbody></table>';
-    // debugger;
     var elContainer = document.querySelector('.board-container');
     elContainer.innerHTML = strHTML;
 }
 
 function renderCell(elCell)
 {
-
-    if (elCell.isMine && elCell.isShown) return MINE;
-    if (elCell.isMarked) return FLAG;
+    var value = EMPTY;
+    if (elCell.isMine) value = MINE;
+    if (elCell.isMarked) value = FLAG;
     if (elCell.isShown) {
 
         if (elCell.minesAroundCount > 0) {
-            return elCell.minesAroundCount;
+            value = elCell.minesAroundCount;
         }
-        return EMPTY;
-    } else {
-        return EMPTY;
     }
-}
 
+    const cell = document.getElementById(`${ elCell.id }`);
+    cell.innerHTML = value;
+    cell.classList.add('clicked-shadow');
+}
 
 function randomCellMine()
 {
     //board[row][column]
-    gBoard[ randInt(0, gBoard.length) ][ randInt(0, gBoard[ 0 ].length) ].isMine = true;
+    var mineLoc = gBoard[ randInt(0, gBoard.length) ][ randInt(0, gBoard[ 0 ].length) ];
+    // mines.push(mineLoc);
+    mineLoc.isMine = true;
 }
 
 function cellClicked(elCell)
@@ -148,33 +142,29 @@ function cellClicked(elCell)
         gGame.isOn = true;
         startTimer();
         var placeMinesCounter = gLevel.MINES;
-        while (placeMinesCounter > 0) {
+        // var mines = []; need to make condition to check that they dont fall on each other;
+        while ((placeMinesCounter > 0)) {
             randomCellMine();
             placeMinesCounter--;
         }
-        // gBoard[ 2 ][ 0 ].isMine = true;
-        // gBoard[ 1 ][ 1 ].isMine = true;
     }
     if (!clickedCell.isShown) {
-        clickedCell.isShown = true;
-        gGame.shownCount++;
+        clickedCell.id = `${ clickedCell.i }-${ clickedCell.j }`
         document.getElementById(`${ elCell.id }`).classList.add('clicked-shadow');
-        if ((!clickedCell.isMarked) && (!clickedCell.isMine)) {
-            expendShown(clickedCell.i, clickedCell.j);
-            //renderBoard(gBoard);
-        }
+        if (clickedCell.minesAroundCount === 0) expendShown(clickedCell.i, clickedCell.j);
         if (clickedCell.isMine) {
+            // even if its last mine, first display on board then pop ' you lose'
+            renderCell(clickedCell);
             lives--;
+            if (lives <= 0) endGame('lose');
             updateLives();
-            if (lives === 0) endGame('lose');
         };
     }
-    elCell.innerHTML = renderCell(clickedCell);
+    renderCell(clickedCell);
     checkGameOver();
     console.log('clicked cell is:', cellIdx)
 }
 
-const updateLives = () => document.querySelector('.lives').innerHTML = lives;
 
 function countMines(cellI, cellJ, mat)
 {
@@ -207,23 +197,6 @@ function setMinesNegsCount(rowIdx, colIdx, board)
     return countMinesAround;
 }
 
-function findNegs(cellI, cellJ)
-{
-    for (var i = cellI - 1; i <= cellI + 1; i++) {
-        if (i < 0 || i >= gBoard.length) continue;
-        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-            if (i === cellI && j === cellJ)
-                continue;
-            if (j < 0 || j >= gBoard[ i ].length)
-                continue;
-            if (gBoard[ i ][ j ].minesAroundCount >= 0 && !gBoard[ i ][ j ].isShown) {
-                var neighborCell = [ i, j ]
-                expendShown(neighborCell)
-            }
-        }
-    }
-}
-
 function cellMarked(elCell)
 {
     // https://www.w3schools.com/jsref/event_oncontextmenu.asp
@@ -238,42 +211,24 @@ function cellMarked(elCell)
     renderBoard(gBoard);
 }
 
-// function expandShown(i, j)
-// {
-//     // When user clicks a cell with no mines around, we need to open not only that cell, but also its neighbors.NOTE: start with a basic implementation that only opens the non - mine 1st degree neighbors 
-//     // Check all neighboring fields
-//     const cellsAround = neighborCells(i, j);
-
-//     for (var k = 0; k < cellsAround.length; k++) {
-//         const x = cellsAround[ k ][ 0 ];
-//         const y = cellsAround[ k ][ 1 ];
-//         const cell = getCell(x, y);
-//         if ((cell !== null) &&
-//             (cell !== undefined) &&
-//             (!cell.isMarked) &&
-//             (!cell.isShown) &&
-//             (!cell.isMine)) {
-//             cell.isShown;
-//             cell.minesAroundCount = countMines(x, y, gBoard)
-//             if (cell.minesAroundCount === 0) {
-
-//                 expandShown(x, y)
-//             }
-//         }
-//     }
-// }
-
-
-
-function expendShown(i, j)
+function expendShown(cellI, cellJ)
 {
-    const cell = gBoard[ i ][ j ];
-    const countMines = cell.minesAroundCount;
-    if (!cell.isMine && !cell.isMarked && (countMines === 0)) {
-        cell.isShown = true;
-        renderCell(cell);
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue;
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (j < 0 || j >= gBoard.length) continue;
+            if (i === cellI && j === cellJ) continue;
+            const cell = gBoard[ i ][ j ];
+            if (!cell.isMine && !cell.isShown && !cell.isMarked) {
+                cell.isShown = true;
+                gGame.shownCount++;
+                cell.id = `${ i }-${ j }`;
+                cell.minesAroundCount = setMinesNegsCount(i, j, gBoard);
+                renderCell(cell)
+                if (cell.minesAroundCount === 0) expendShown(i, j);
+            }
+        }
     }
-
 }
 
 function checkGameOver()
@@ -290,50 +245,42 @@ function checkGameOver()
     // }
 }
 
-var elSmiley = document.querySelector('.smiley');
-var elTable = document.querySelector('table');
-var elTd = document.querySelectorAll('td');
+const elSmiley = document.querySelector('.smiley');
+const elTable = document.querySelector('table');
+const elTd = document.querySelectorAll('td');
+const elModal = document.querySelector('.modal');
 
 function endGame(state)
 {
     gGame.isOn = false;
     stopTimer();
     if (state === 'win') {
-        alert('win')
         elSmiley.innerHTML = WIN;
+        elModal.innerText = 'You win /n you da bomb🦾';
+        openModal('You win /n you da bomb🦾')
     };
 
-    // openModal('you win')
     if (state === 'lose') {
-        // openModal('you lose');
-        alert('lose')
+        openModal('you lose');
+
         elSmiley.innerHTML = DEAD;
-        elTable.classList.add('lose')
-        elTd.classList.add('td-lose')
+        elTable.classList.add('lose');
+        elTd.classList.add('td-lose');
+        openModal('BOOM /n You lose')
     }
-    // openModal();
 }
+function openModal(msg)
+{
+    elModal.style.display = 'block';
+    elModal.innerText = msg;
+    // hide the modal -set interval to dissapear after 3 sec
+    setTimeout(() => { elModal.style.display = 'none'; }, 3000);
 
-
-
-//     const elModal = document.querySelector('.modal');
-
-// function openModal(msg)
-// {
-
-//     elModal.style.display = 'block';
-//     elModal.innerText = msg;
-// }
+}
 
 // function closeModal()
 // {
-//     // hide the modal -set interval to dissapear after 3 sec
-//     var elModal = document.querySelector('.modal');
 //     elModal.style.display = 'none';
+//     var elModal = document.querySelector('.modal');
 // }
 
-
-// <div class="modal">
-//     <button onclick="closeModal()">x</button>
-//     <h3><span></span></h3>
-// </div>

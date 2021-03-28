@@ -3,7 +3,7 @@ var timerInterval;
 
 function startTimer()
 {
-    if (!gGame.isOn || !(gGame.secsPassed === 0)) return;
+    if (!gGame.isOn || (gGame.secsPassed !== 0)) return;
 
     var second = 0,
         minute = 0,
