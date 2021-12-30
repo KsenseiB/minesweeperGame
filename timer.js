@@ -25,4 +25,6 @@ function startTimer()
     }, 1000);
 };
 
-const stopTimer = () => clearInterval(timerInterval);;
+function stopTimer() {
+    clearInterval(timerInterval)
+};

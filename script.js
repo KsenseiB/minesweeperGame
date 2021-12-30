@@ -63,7 +63,7 @@ function setDiff(num)
     if (num === 12) {
         gLevel.SIZE = 12;
         gLevel.MINES = 30;
-        lives = 3;
+        lives = 4;
     };
     gGame.isOn = false;
     gGame.shownCount = 0;
